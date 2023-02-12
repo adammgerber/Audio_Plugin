@@ -24,6 +24,7 @@ public:
     ~SimpleEQAudioProcessor() override;
 
     //==============================================================================
+    // gets called by host when its about to start playback
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
@@ -31,6 +32,11 @@ public:
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
    #endif
 
+    // when you hit play button in transport control
+    // host sends regular buffers at regular rate into plugin
+    // it is plugins job to return any audio it has finished processing
+    // cannot intterupt this chain of events, if you add latency for example
+    // it will cause clicks and pops
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
     //==============================================================================
@@ -55,6 +61,9 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    
+    static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    juce::AudioProcessorValueTreeState apvts {*this, nullptr, "Parameters", createParameterLayout()};
 
 private:
     //==============================================================================
