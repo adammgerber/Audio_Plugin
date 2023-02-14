@@ -1,4 +1,4 @@
-# audio-plugin
+# audio-visualizer
 
 An audio plugin app created in C++ using the JUCE framework
 
